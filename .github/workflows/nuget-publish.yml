@@ -2,37 +2,32 @@ name: Build and Publish NuGet Package
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  build_and_publish:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+        
+    - name: Restore Dependencies
+      run: dotnet restore
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '7.0.x'
+    - name: Build
+      run: dotnet build --no-restore -c Release
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: Test
+      run: dotnet test --no-build -c Release
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+    - name: Package
+      run: dotnet pack --no-build -c Release
 
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
-
-      - name: Pack
-        run: dotnet pack --no-build --configuration Release /p:PackageVersion=${{ github.run_number }}.0.0
-
-      - name: Push
-        uses: brandedoutcast/publish-nuget@v2.5.5
-        with:
-          PROJECT_FILE_PATH: 'src/Source.csproj'
-          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
-          PACKAGE_NAME: 'Source'
+    - name: Push to NuGet
+      run: dotnet nuget push "src/**/bin/Release/*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
