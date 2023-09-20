@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +27,17 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+  mark-success:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create Success Artifact
+      run: touch success.txt
+
+    - name: Upload Success Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: success-marker
+        path: success.txt
