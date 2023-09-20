@@ -4,5 +4,29 @@
 		<OutputType>Library</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+
+		<!-- NuGet Package Information -->
+		<PackageId>Filter.NET</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>Thomas Lazenby</Authors>
+		<Company>Thomas Lazenby</Company>
+
+		<Description>Filter.NET is a versatile and performant library designed to facilitate advanced filtering operations on collections of items in .NET.</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<PackageProjectUrl>https://github.com/Thomas-Lazenby/Filter.NET</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Thomas-Lazenby/Filter.NET</RepositoryUrl>
+		
+		<Copyright>Copyright © 2023 Thomas Lazenby</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+		<RepositoryType>git</RepositoryType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath=""/>
+	</ItemGroup>
+	
 </Project>
