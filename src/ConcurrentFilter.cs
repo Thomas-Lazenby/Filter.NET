@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Filter
@@ -7,12 +8,12 @@ namespace Filter
     /// Provides a filtering mechanism for collections of items of type T.
     /// </summary>
     /// <typeparam name="T">The type of items to be filtered.</typeparam>
-    public class Filter<T> : IFilter<T>
+    public class ConcurrentFilter<T> : IFilter<T>
         where T : notnull, IEquatable<T>
     {
         public FilterType Default { get; set; }
 
-        private readonly Dictionary<T, FilterType> _filterItems = new();
+        private readonly ConcurrentDictionary<T, FilterType> _filterItems = new();
 
         public bool Equals(IFilter<T>? other)
         {
@@ -53,12 +54,12 @@ namespace Filter
 
         public object Clone()
         {
-            var filter = new Filter<T>();
+            var filter = new ConcurrentFilter<T>();
 
             filter.Default = Default;
 
             foreach (var pair in _filterItems)
-                filter._filterItems.Add(pair.Key, pair.Value);
+                filter._filterItems.TryAdd(pair.Key, pair.Value);
 
             return filter;
         }
