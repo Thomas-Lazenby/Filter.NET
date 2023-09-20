@@ -62,5 +62,8 @@ namespace Filter
 
             return filter;
         }
+
+        public bool SetAsDefault(T item)
+            => _filterItems.Remove(item);
     }
 }

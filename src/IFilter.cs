@@ -30,6 +30,14 @@ namespace Filter
         bool ShouldInclude(T item);
 
         /// <summary>
+        /// Removes the specified item from the override list, causing it to revert to the default filter behavior during filtering operations.
+        /// </summary>
+        /// <param name="item">The item to reset to default filter behavior.</param>
+        /// <returns>true if the item was found and removed from the override list; otherwise, false.</returns>
+        bool SetAsDefault(T item);
+
+
+        /// <summary>
         /// Clears all override options, reverting to the default filter behavior.
         /// </summary>
         void Clear();
