@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,15 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '7.0.x'
-
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+          
     - name: Restore dependencies
       run: dotnet restore
 
@@ -26,32 +34,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-  mark-success:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Create Success Artifact
-      run: touch success.txt
-
-    - name: Upload Success Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: success-marker
-        path: success.txt
-
-  check-success:
-    needs: mark-success
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download Success Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: success-marker
-
-  nuget-build:
-    needs: check-success
+  publish:
+    needs: build_and_test
     runs-on: windows-latest
 
     steps:
@@ -62,15 +46,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '7.0.x'
-        
-    - name: Restore Dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --no-restore -c Release
-
-    - name: Test
-      run: dotnet test --no-build -c Release
 
     - name: Package
       run: dotnet pack --no-build -c Release
