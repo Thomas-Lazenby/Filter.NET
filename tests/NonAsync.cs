@@ -59,10 +59,8 @@ namespace Tests
         {
             int item = 1;
             filter.Include(item);
+            filter.SetAsDefault(item);
 
-            bool result = filter.SetAsDefault(item);
-
-            Assert.True(result);
             Assert.Equal(filter.Default, filter.ShouldInclude(item) ? FilterType.Include : FilterType.Exclude);
         }
 

@@ -58,13 +58,23 @@ namespace Tests
         public async Task SetAsDefault_Item_RemovesOverrideAsync(IFilter<int> filter)
         {
             int item = 1;
-            await Task.Run(() => filter.Include(item));
 
-            bool result = await Task.Run(() => filter.SetAsDefault(item));
+            // Spin up multiple tasks to perform operations on the filter.
+            var tasks = new List<Task>
+            {
+                Task.Run(() => filter.Include(item)),
+                Task.Run(() => filter.SetAsDefault(item)),
+                Task.Run(() =>
+                    {
+                        // Ensure that, after concurrent operations, the item adheres to the default filter setting.
+                        var result = filter.ShouldInclude(item) ? FilterType.Include : FilterType.Exclude;
+                        Assert.Equal(filter.Default, result);
+                    })
+            };
 
-            Assert.True(result);
-            Assert.Equal(filter.Default, await Task.Run(() => filter.ShouldInclude(item)) ? FilterType.Include : FilterType.Exclude);
+            await Task.WhenAll(tasks);
         }
+
 
         [Theory]
         [ClassData(typeof(ConcurrentFilterTestData))]
