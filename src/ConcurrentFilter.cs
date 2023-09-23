@@ -35,11 +35,32 @@ namespace Filter
             return true;
         }
 
-        public void Exclude(T item)
-            => _filterItems[item] = FilterType.Exclude;
+        public IFilter<T> Exclude(T item)
+        {
+            _filterItems[item] = FilterType.Exclude;
+            return this;
+        }
 
-        public void Include(T item)
-            => _filterItems[item] = FilterType.Include;
+        public IFilter<T> Exclude(params T[] items)
+        {
+            foreach (var item in items)
+                _filterItems[item] = FilterType.Exclude;
+            return this;
+        }
+
+
+        public IFilter<T> Include(T item)
+        {
+            _filterItems[item] = FilterType.Include;
+            return this;
+        }
+
+        public IFilter<T> Include(params T[] items)
+        {
+            foreach(var item in  items)
+                _filterItems[item] = FilterType.Include;
+            return this;
+        }
 
         public bool ShouldInclude(T item)
         {
@@ -49,8 +70,11 @@ namespace Filter
             return Default == FilterType.Include;
         }
 
-        public void Clear()
-            => _filterItems.Clear();
+        public IFilter<T> Clear()
+        {
+            _filterItems.Clear();
+            return this;
+        }
 
         public object Clone()
         {
@@ -64,7 +88,10 @@ namespace Filter
             return filter;
         }
 
-        public bool SetAsDefault(T item)
-            => _filterItems.Remove(item, out _);
+        public IFilter<T> SetAsDefault(T item)
+        {
+            _filterItems.Remove(item, out _);
+            return this;
+        }
     }
 }

@@ -14,13 +14,27 @@ namespace Filter
 
         /// <summary> Overrides the current default behavior for the specified item, marking it to be included in the filter results. </summary>
         /// <param name="item">The item to include in the filter results.</param>
+        /// <returns>The filter itself.</returns>
         IFilter<T> Include(T item);
+
+        /// <summary> Overrides the current default behavior for the specified items, marking them to be included in the filter results. </summary>
+        /// <param name="items">The items to include in the filter results.</param>
+        /// <returns>The filter itself.</returns>
+        IFilter<T> Include(params T[] items);
 
         /// <summary>
         /// Overrides the current default behavior for the specified item, marking it to be excluded from the filter results.
         /// </summary>
         /// <param name="item">The item to exclude from the filter results.</param>
+        /// <returns>The filter itself.</returns>
         IFilter<T> Exclude(T item);
+
+        /// <summary>
+        /// Overrides the current default behaviours for the specified items, marking them to be excluded from the filter results.
+        /// </summary>
+        /// <param name="items">The items to exclude from the filter results.</param>
+        /// <returns>The filter itself.</returns>
+        IFilter<T> Exclude(params T[] items);
 
         /// <summary>
         /// Determines whether the specified item should be included in the filter results based on the current filter settings.
@@ -33,12 +47,11 @@ namespace Filter
         /// Removes the specified item from the override list, causing it to revert to the default filter behavior during filtering operations.
         /// </summary>
         /// <param name="item">The item to reset to default filter behavior.</param>
-        /// <returns>true if the item was found and removed from the override list; otherwise, false.</returns>
+        /// <returns>The filter itself.</returns>
         IFilter<T> SetAsDefault(T item);
 
-        /// <summary>
-        /// Clears all override options, reverting to the default filter behavior.
-        /// </summary>
-        void Clear();
+        /// <summary> Clears all override options, reverting to the default filter behavior. </summary>
+        /// <returns>The filter itself.</returns>
+        IFilter<T> Clear();
     }
 }
