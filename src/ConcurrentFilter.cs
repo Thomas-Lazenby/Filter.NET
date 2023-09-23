@@ -25,10 +25,10 @@ namespace Filter
 
             foreach (var pair in _filterItems)
             {
-                if (pair.Value == FilterType.Include && !other.ShouldInclude(pair.Key))
+                if (pair.Value == FilterType.Include && !other.IsIncluded(pair.Key))
                     return false;
 
-                if (pair.Value == FilterType.Exclude && other.ShouldInclude(pair.Key))
+                if (pair.Value == FilterType.Exclude && other.IsIncluded(pair.Key))
                     return false;
             }
 
@@ -62,7 +62,7 @@ namespace Filter
             return this;
         }
 
-        public bool ShouldInclude(T item)
+        public bool IsIncluded(T item)
         {
             if (_filterItems.TryGetValue(item, out var filterType))
                 return filterType == FilterType.Include;
