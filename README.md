@@ -17,13 +17,16 @@ Filter.NET is a versatile and performant library designed to facilitate advanced
 ### Basics
 
 ```csharp
-var filter = new Filter<int>(); // All values are filtered as included, unless changed by Default.
+var filter = new Filter<int>(); // All values are filtered as included unless changed by Default.
 
 filter.Include(2, 4, 6, 8)
     .Exclude(1, 3, 5, 7);
 
-bool isFiveIncluded = filter.IsIncluded(5); // true
-bool isTenIncluded = filter.IsIncluded(10); // false
+bool isFiveIncluded = filter.IsIncluded(5); // false
+bool isTenIncluded = filter.IsIncluded(10); // true, Default is Included by default if not set.
+
+bool isFiveExcluded = filter.IsExcluded(5); // true
+bool isTendExcluded = filter.IsExcluded(10); // false, Default is Included by default if not set.
 ```
 
 ### Operations
@@ -54,8 +57,8 @@ bool containsExplicitExcluded2 = filter.AnyExplicitExcluded(5, 231); // false
 
 bool containsAtAllInIncludedOrExcludedExplicitly = filter.ContainsExplicitly(2); // true;
 
-IEnumerable<int> explicitIncludedItems = filter.ExplicitIncludedItems; // list of explicit included items.
-IEnumerable<int> explicitExcludedItems = filter.ExplicitExcludedItems; // list of explicit excluded items.
+IEnumerable<int> explicitIncludedItems = filter.ExplicitIncludedItems; // list of explicitly included items.
+IEnumerable<int> explicitExcludedItems = filter.ExplicitExcludedItems; // list of explicitly excluded items.
 ```
 
 # Installation
