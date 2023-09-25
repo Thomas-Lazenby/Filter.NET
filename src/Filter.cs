@@ -12,6 +12,7 @@ namespace Filter
     {
         public FilterType Default { get; set; }
 
+        // No beneifical case of using two hashsets instead?
         private readonly Dictionary<T, FilterType> _filterItems = new();
 
         public bool Equals(IFilter<T>? other)
@@ -33,6 +34,8 @@ namespace Filter
 
             return true;
         }
+
+        #region Write Operations
 
         public IFilter<T> Exclude(T item)
         {
@@ -60,13 +63,10 @@ namespace Filter
             return this;
         }
 
-
-        public bool IsIncluded(T item)
+        public IFilter<T> SetAsDefault(T item)
         {
-            if (_filterItems.TryGetValue(item, out var filterType))
-                return filterType == FilterType.Include;
-
-            return Default == FilterType.Include;
+            _filterItems.Remove(item);
+            return this;
         }
 
         public IFilter<T> Clear()
@@ -87,10 +87,54 @@ namespace Filter
             return filter;
         }
 
-        public IFilter<T> SetAsDefault(T item)
+        #endregion
+
+        #region Read Operations
+
+        public IEnumerable<T> ExplicitIncludedItems => throw new NotImplementedException();
+
+        public IEnumerable<T> ExplicitExcludedItems => throw new NotImplementedException();
+
+        public bool IsExplicitlyExcluded(T item)
         {
-            _filterItems.Remove(item);
-            return this;
+            throw new NotImplementedException();
         }
+
+        public bool IsExplicitlyIncluded(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsIncluded(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsExcluded(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ShouldPass(params T[] items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ShouldFail(params T[] items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AnyIncluded(params T[] items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AnyExcluded(params T[] items)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

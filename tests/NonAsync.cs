@@ -5,6 +5,14 @@ namespace Tests
 {
     public class NonAsync
     {
+        public void T()
+        {
+            IFilter<int> w;
+
+            w.AreIncluded
+        }
+
+
         [Theory]
         [ClassData(typeof(FilterTestData))]
         public void DefaultProperty_SetAndGet_ReturnsExpectedValue(IFilter<int> filter)
