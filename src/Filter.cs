@@ -15,21 +15,9 @@ namespace Filter
         // No beneifical case of using two hashsets instead?
         private readonly Dictionary<T, FilterType> _filterItems = new();
 
-        public bool Equals(IFilter<T>? other)
-        {
-            if (other == null)
-                return false;
-
-            if (Default != other.Default)
-                return false;
-
-            if (ExplicitExcludedItems.Count() != other.ExplicitExcludedItems.Count() || ExplicitExcludedItems.Union(other.ExplicitExcludedItems).Distinct().Any()) return false;
-
-            if (ExplicitIncludedItems.Count() != other.ExplicitIncludedItems.Count() || ExplicitIncludedItems.Union(other.ExplicitIncludedItems).Distinct().Any()) return false;
+        public bool Equals(IFilter<T>? other) => FilterHelper.Equals(this, other);
 
 
-            return true;
-        }
 
         #region Write Operations
 
@@ -73,9 +61,10 @@ namespace Filter
 
         public object Clone()
         {
-            var filter = new Filter<T>();
-
-            filter.Default = Default;
+            var filter = new Filter<T>
+            {
+                Default = Default
+            };
 
             foreach (var pair in _filterItems)
                 filter._filterItems.Add(pair.Key, pair.Value);

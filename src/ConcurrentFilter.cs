@@ -16,22 +16,8 @@ namespace Filter
         // No beneifical case of using two hashsets instead?
         private readonly ConcurrentDictionary<T, FilterType> _filterItems = new();
 
-        public bool Equals(IFilter<T>? other)
-        {
-            if (other == null)
-                return false;
+        public bool Equals(IFilter<T>? other) => FilterHelper.Equals(this, other);
 
-            if (Default != other.Default)
-                return false;
-
-
-            if ( ExplicitExcludedItems.Count() != other.ExplicitExcludedItems.Count() || ExplicitExcludedItems.Union(other.ExplicitExcludedItems).Distinct().Any() ) return false;
-
-            if ( ExplicitIncludedItems.Count() != other.ExplicitIncludedItems.Count() || ExplicitIncludedItems.Union(other.ExplicitIncludedItems).Distinct().Any()) return false;
-
-
-            return true;
-        }
 
         #region Write Operations
 
@@ -77,9 +63,10 @@ namespace Filter
 
         public object Clone()
         {
-            var filter = new ConcurrentFilter<T>();
-
-            filter.Default = Default;
+            var filter = new ConcurrentFilter<T>
+            {
+                Default = Default
+            };
 
             foreach (var pair in _filterItems)
                 filter._filterItems.TryAdd(pair.Key, pair.Value);
