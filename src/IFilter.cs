@@ -53,6 +53,18 @@ namespace Filter
         #region Read Operations
 
         /// <summary>
+        /// Retrieves a list of items that are explicitly set to be included.
+        /// </summary>
+        /// <returns>Items set for inclusion.</returns>
+        IEnumerable<T> ExplicitIncludedItems { get; }
+
+        /// <summary>
+        /// Retrieves a list of items that are explicitly set to be excluded.
+        /// </summary>
+        /// <returns>Items set for exclusion.</returns>
+        IEnumerable<T> ExplicitExcludedItems { get; }
+
+        /// <summary>
         /// Determines if the specified item is explicitly excluded based on the current filter settings.
         /// </summary>
         /// <param name="item">The item to check.</param>
@@ -67,32 +79,19 @@ namespace Filter
         bool IsExplicitlyIncluded(T item);
 
 
-
-        /// <summary>
-        /// Retrieves a list of items that are explicitly set to be included.
-        /// </summary>
-        /// <returns>Items set for inclusion.</returns>
-        IEnumerable<T> IncludedItems { get; }
-
-        /// <summary>
-        /// Retrieves a list of items that are explicitly set to be excluded.
-        /// </summary>
-        /// <returns>Items set for exclusion.</returns>
-        IEnumerable<T> ExcludedItems { get; }
-
-        /// <summary>
-        /// Determines which of the specified items should be included based on the current filter settings.
-        /// </summary>
-        /// <param name="items">The items to check.</param>
-        /// <returns>A dictionary where the key is the item and the value is a boolean indicating if it should be included.</returns>
-        IReadOnlyDictionary<T, bool> AreIncluded(params T[] items);
-
-        /// <summary>
-        /// Determines whether the specified item should be included in the filter results based on the current filter settings.
-        /// </summary>
-        /// <param name="item">The item to check.</param>
-        /// <returns>true if the item should be included; otherwise, false.</returns>
         bool IsIncluded(T item);
+
+        bool IsExcluded(T item);
+
+
+        bool ShouldPass(params T[] items);
+
+        bool ShouldFail(params T[] items);
+        
+
+        bool AnyIncluded(params T[] items);
+
+        bool AnyExcluded(params T[] items);
 
         #endregion
     }
