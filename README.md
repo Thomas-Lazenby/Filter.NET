@@ -14,42 +14,48 @@ Filter.NET is a versatile and performant library designed to facilitate advanced
 
 ## Basic Usage
 
-### Filter
+### Basics
 
 ```csharp
-// Creating a new Filter instance with a default setting of Include
-var filter = new Filter<int> { Default = FilterType.Include };
+var filter = new Filter<int>(); // All values are filtered as included, unless changed by Default.
 
-// Including and Excluding specific items
-filter.Include(5);
-filter.Exclude(10);
+filter.Include(2, 4, 6, 8)
+    .Exclude(1, 3, 5, 7);
 
-// Testing the filter
-bool isFiveIncluded = filter.ShouldInclude(5);  // true
-bool isTenIncluded = filter.ShouldInclude(10); // false
+bool isFiveIncluded = filter.IsIncluded(5); // true
+bool isTenIncluded = filter.IsIncluded(10); // false
+```
+
+### Operations
+```csharp
+var filter = new Filter<int>();
+var filter2 = new ConcurrentFilter<int>();
 
 // Clearing all override options and reverting to the default behavior
 filter.Clear();
-bool isDefaultBehaviourRestored = filter.ShouldInclude(5);  // true (Default)
 
-// Cloning the filter
-var newFilter = (Filter<int>)filter.Clone();
+// Checking if equilvant
+bool equilvant = filter.Equals(filter2); // true.
 ```
 
-### ConcurrentFilter
-
+### Explicity
 ```csharp
-// Creating a new ConcurrentFilter instance with a default setting of Include
-var concurrentFilter = new ConcurrentFilter<int> { Default = FilterType.Include };
+var filter = new Filter<int>()
+    .Include(2, 3, 5)
+    .Exclude(4);
 
-// Including and Excluding specific items concurrently
-// (Assuming thread-safe operations are implemented)
-concurrentFilter.Include(5);
-concurrentFilter.Exclude(10);
+bool containsExplicitIncluded1 = filter.AnyExplicitIncluded(4, 9); // false
+bool containsExplicitIncluded2 = filter.AnyExplicitIncluded(5, 231); // true
 
-// Testing the concurrentFilter
-bool isFiveIncludedConcurrently = concurrentFilter.ShouldInclude(5);  // true
-bool isTenIncludedConcurrently = concurrentFilter.ShouldInclude(10); // false
+bool containsExplicitExcluded1 = filter.AnyExplicitExcluded(4, 9); // true
+bool containsExplicitExcluded2 = filter.AnyExplicitExcluded(5, 231); // false
+
+
+
+bool containsAtAllInIncludedOrExcludedExplititly2 = filter.ContainsExplicitly(2); // true;
+
+IEnumerable<int> explicitIncludedItems = filter.ExplicitIncludedItems; // list of explicit included items.
+IEnumerable<int> explicitExcludedItems = filter.ExplicitExcludedItems; // list of explicit excluded items.
 ```
 
 # Installation
