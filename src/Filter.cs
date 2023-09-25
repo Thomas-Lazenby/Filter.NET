@@ -91,48 +91,69 @@ namespace Filter
 
         #region Read Operations
 
-        public IEnumerable<T> ExplicitIncludedItems => throw new NotImplementedException();
+        #region Explicit
 
-        public IEnumerable<T> ExplicitExcludedItems => throw new NotImplementedException();
+        public IEnumerable<T> ExplicitIncludedItems => _filterItems.Where( x => x.Value == FilterType.Include).Select( x => x.Key );
 
-        public bool IsExplicitlyExcluded(T item)
+        public IEnumerable<T> ExplicitExcludedItems => _filterItems.Where(x => x.Value == FilterType.Exclude).Select(x => x.Key);
+
+        public bool IsExplicitlyIncluded(T item) => _filterItems.TryGetValue(item, out var included) && included == FilterType.Include;
+
+        public bool IsExplicitlyExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) && excluded == FilterType.Exclude;
+
+
+        public bool AnyExplicitIncluded(params T[] items)
         {
-            throw new NotImplementedException();
+            // Worse case: O(N)
+            foreach(var item in items)
+            {
+                if( IsExplicitlyIncluded(item) )
+                    return true;
+            }
+
+            return false;
         }
 
-        public bool IsExplicitlyIncluded(T item)
+        public bool AnyExplicitExcluded(params T[] items)
         {
-            throw new NotImplementedException();
+            // Worse case: O(N)
+            foreach (var item in items)
+            {
+                if ( IsExplicitlyExcluded(item) )
+                    return true;
+            }
+
+            return false;
         }
 
-        public bool IsIncluded(T item)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        public bool IsExcluded(T item)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsIncluded(T item) => _filterItems.TryGetValue(item, out var included) ? included == FilterType.Include : Default == FilterType.Include;
 
-        public bool ShouldPass(params T[] items)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ShouldFail(params T[] items)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) ? excluded == FilterType.Exclude : Default == FilterType.Exclude;
 
         public bool AnyIncluded(params T[] items)
         {
-            throw new NotImplementedException();
+            // Worse case: O(N)
+            foreach (var item in items)
+            {
+                if (IsIncluded(item))
+                    return true;
+            }
+
+            return false;
         }
 
         public bool AnyExcluded(params T[] items)
         {
-            throw new NotImplementedException();
+            // Worse case: O(N)
+            foreach (var item in items)
+            {
+                if (IsExcluded(item))
+                    return true;
+            }
+
+            return false;
         }
 
         #endregion

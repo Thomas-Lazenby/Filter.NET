@@ -113,20 +113,6 @@ namespace Filter
         /// <returns></returns>
         bool AnyExcluded(params T[] items);
 
-        /// <summary>
-        /// Will use <see cref="Default"/> and <see cref="ExplicitExcludedItems"/> if any are contained in either then will return false; else true.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        bool ShouldPass(params T[] items);
-
-        /// <summary>
-        /// Will use <see cref="Default"/> and <see cref="ExplicitIncludedItems"/> if any are contained in either then will return true; else false.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        bool ShouldFail(params T[] items);
-
         #endregion
     }
 }
