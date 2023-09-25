@@ -13,6 +13,7 @@ namespace Filter
     {
         public FilterType Default { get; set; }
 
+        // No beneifical case of using two hashsets instead?
         private readonly ConcurrentDictionary<T, FilterType> _filterItems = new();
 
         public bool Equals(IFilter<T>? other)
@@ -23,34 +24,56 @@ namespace Filter
             if (Default != other.Default)
                 return false;
 
-            foreach (var pair in _filterItems)
-            {
-                if (pair.Value == FilterType.Include && !other.ShouldInclude(pair.Key))
-                    return false;
 
-                if (pair.Value == FilterType.Exclude && other.ShouldInclude(pair.Key))
-                    return false;
-            }
+            if ( ExplicitExcludedItems.Count() != other.ExplicitExcludedItems.Count() || ExplicitExcludedItems.Union(other.ExplicitIncludedItems).Distinct().Any() ) return false;
+
+            if ( ExplicitIncludedItems.Count() != other.ExplicitIncludedItems.Count() || ExplicitIncludedItems.Union(other.ExplicitIncludedItems).Distinct().Any()) return false;
+
 
             return true;
         }
 
-        public void Exclude(T item)
-            => _filterItems[item] = FilterType.Exclude;
+        #region Write Operations
 
-        public void Include(T item)
-            => _filterItems[item] = FilterType.Include;
-
-        public bool ShouldInclude(T item)
+        public IFilter<T> Exclude(T item)
         {
-            if (_filterItems.TryGetValue(item, out var filterType))
-                return filterType == FilterType.Include;
-
-            return Default == FilterType.Include;
+            _filterItems.TryAdd(item, FilterType.Exclude);
+            return this;
         }
 
-        public void Clear()
-            => _filterItems.Clear();
+        public IFilter<T> Exclude(params T[] items)
+        {
+            foreach (var item in items)
+                _filterItems.TryAdd(item, FilterType.Exclude);
+
+            return this;
+        }
+
+        public IFilter<T> Include(T item)
+        {
+            _filterItems.TryAdd(item, FilterType.Include);
+            return this;
+        }
+
+        public IFilter<T> Include(params T[] items)
+        {
+            foreach (var item in items)
+                _filterItems.TryAdd(item,FilterType.Include);
+
+            return this;
+        }
+
+        public IFilter<T> SetAsDefault(T item)
+        {
+            _filterItems.Remove(item, out _);
+            return this;
+        }
+
+        public IFilter<T> Clear()
+        {
+            _filterItems.Clear();
+            return this;
+        }
 
         public object Clone()
         {
@@ -64,7 +87,68 @@ namespace Filter
             return filter;
         }
 
-        public bool SetAsDefault(T item)
-            => _filterItems.Remove(item, out _);
+        #endregion
+
+        #region Read Operations
+
+        #region Explicit
+
+        public IEnumerable<T> ExplicitIncludedItems => _filterItems.Where( x => x.Value == FilterType.Include).Select( x => x.Key );
+
+        public IEnumerable<T> ExplicitExcludedItems => _filterItems.Where(x => x.Value == FilterType.Exclude).Select(x => x.Key);
+
+        public bool IsExplicitlyIncluded(T item) => _filterItems.TryGetValue(item, out var included) && included == FilterType.Include;
+
+        public bool IsExplicitlyExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) && excluded == FilterType.Exclude;
+
+        public bool ContainsExplicitly(T item) => _filterItems.ContainsKey(item);
+        
+        public bool AnyExplicitIncluded(params T[] items)
+        {
+            // Worse case: O(N)
+            foreach(var item in items)
+                if( IsExplicitlyIncluded(item) )
+                    return true;
+
+            return false;
+        }
+
+        public bool AnyExplicitExcluded(params T[] items)
+        {
+            // Worse case: O(N)
+            foreach (var item in items)
+                if ( IsExplicitlyExcluded(item) )
+                    return true;
+
+            return false;
+        }
+
+        #endregion
+
+        public bool IsIncluded(T item) => _filterItems.TryGetValue(item, out var included) ? included == FilterType.Include : Default == FilterType.Include;
+
+        public bool IsExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) ? excluded == FilterType.Exclude : Default == FilterType.Exclude;
+
+        public bool AnyIncluded(params T[] items)
+        {
+            // Worse case: O(N)
+            foreach (var item in items)
+                if (IsIncluded(item))
+                        return true;
+
+            return false;
+        }
+
+        public bool AnyExcluded(params T[] items)
+        {
+            // Worse case: O(N)
+            foreach (var item in items)
+                if (IsExcluded(item))
+                    return true;
+
+            return false;
+        }
+
+        #endregion
     }
 }
