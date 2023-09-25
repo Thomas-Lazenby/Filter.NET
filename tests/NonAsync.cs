@@ -5,13 +5,6 @@ namespace Tests
 {
     public class NonAsync
     {
-        public void T()
-        {
-            IFilter<int> w;
-
-            w.AreIncluded
-        }
-
 
         [Theory]
         [ClassData(typeof(FilterTestData))]
