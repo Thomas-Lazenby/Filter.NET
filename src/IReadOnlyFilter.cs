@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Filter
 {
+    /// <summary>
+    /// Interface for a filtering mechanism for collections of items of type T, readonly.
+    /// <para>Keywords</para>
+    /// <para>Explicitly - Registered manually using Include and Exclude methods, overriding the <see cref="Default"/> behaviour.</para>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IReadOnlyFilter<T>
     {
         #region Read Operations

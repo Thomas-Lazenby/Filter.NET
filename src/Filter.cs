@@ -23,14 +23,9 @@ namespace Filter
             if (Default != other.Default)
                 return false;
 
-            foreach (var pair in _filterItems)
-            {
-                if (pair.Value == FilterType.Include && !other.IsIncluded(pair.Key))
-                    return false;
+            if(ExplicitExcludedItems != other.ExplicitExcludedItems) return false;
 
-                if (pair.Value == FilterType.Exclude && other.IsIncluded(pair.Key))
-                    return false;
-            }
+            if(ExplicitIncludedItems != other.ExplicitIncludedItems) return false;
 
             return true;
         }
@@ -106,10 +101,8 @@ namespace Filter
         {
             // Worse case: O(N)
             foreach(var item in items)
-            {
                 if( IsExplicitlyIncluded(item) )
                     return true;
-            }
 
             return false;
         }
@@ -118,10 +111,8 @@ namespace Filter
         {
             // Worse case: O(N)
             foreach (var item in items)
-            {
                 if ( IsExplicitlyExcluded(item) )
                     return true;
-            }
 
             return false;
         }
@@ -136,10 +127,8 @@ namespace Filter
         {
             // Worse case: O(N)
             foreach (var item in items)
-            {
                 if (IsIncluded(item))
-                    return true;
-            }
+                        return true;
 
             return false;
         }
@@ -148,10 +137,8 @@ namespace Filter
         {
             // Worse case: O(N)
             foreach (var item in items)
-            {
                 if (IsExcluded(item))
                     return true;
-            }
 
             return false;
         }
