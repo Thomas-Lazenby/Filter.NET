@@ -23,9 +23,11 @@ namespace Filter
             if (Default != other.Default)
                 return false;
 
-            if(ExplicitExcludedItems != other.ExplicitExcludedItems) return false;
 
-            if(ExplicitIncludedItems != other.ExplicitIncludedItems) return false;
+            if (ExplicitExcludedItems.Count() != other.ExplicitExcludedItems.Count() || !ExplicitExcludedItems.Union(other.ExplicitIncludedItems).Any()) return false;
+
+            if (ExplicitIncludedItems.Count() != other.ExplicitIncludedItems.Count() || !ExplicitIncludedItems.Union(other.ExplicitIncludedItems).Any()) return false;
+
 
             return true;
         }
