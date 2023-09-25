@@ -1,6 +1,6 @@
 ﻿using Filter;
 
-namespace Tests
+namespace Filter.Tests
 {
     public class FilterTestData : TheoryData<IFilter<int>>
     {

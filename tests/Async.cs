@@ -1,9 +1,9 @@
 using Xunit;
 using Filter;
 using System.Threading.Tasks;
-using System.Collections.Generic; // Required for List<T>
+using System.Collections.Generic;
 
-namespace Tests
+namespace Filter.Tests
 {
     public class Async
     {

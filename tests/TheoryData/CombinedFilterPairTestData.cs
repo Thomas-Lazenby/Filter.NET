@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using Filter;  // Assuming Filter namespace contains the Filter<int> class definition
 
-namespace Tests
+namespace Filter.Tests
 {
     public class CombinedFilterPairTestData : TheoryData<IFilter<int>, IFilter<int>>
     {
