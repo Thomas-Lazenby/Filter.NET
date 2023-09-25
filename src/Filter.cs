@@ -23,7 +23,6 @@ namespace Filter
             if (Default != other.Default)
                 return false;
 
-
             if (ExplicitExcludedItems.Count() != other.ExplicitExcludedItems.Count() || ExplicitExcludedItems.Union(other.ExplicitIncludedItems).Distinct().Any()) return false;
 
             if (ExplicitIncludedItems.Count() != other.ExplicitIncludedItems.Count() || ExplicitIncludedItems.Union(other.ExplicitIncludedItems).Distinct().Any()) return false;
@@ -98,6 +97,7 @@ namespace Filter
 
         public bool IsExplicitlyExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) && excluded == FilterType.Exclude;
 
+        public bool ContainsExplicitly(T item) => _filterItems.ContainsKey(item);
 
         public bool AnyExplicitIncluded(params T[] items)
         {

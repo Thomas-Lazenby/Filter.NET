@@ -101,7 +101,8 @@ namespace Filter
 
         public bool IsExplicitlyExcluded(T item) => _filterItems.TryGetValue(item, out var excluded) && excluded == FilterType.Exclude;
 
-
+        public bool ContainsExplicitly(T item) => _filterItems.ContainsKey(item);
+        
         public bool AnyExplicitIncluded(params T[] items)
         {
             // Worse case: O(N)

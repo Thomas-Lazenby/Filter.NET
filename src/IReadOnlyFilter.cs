@@ -58,6 +58,13 @@ namespace Filter
         /// <returns></returns>
         bool AnyExplicitExcluded(params T[] items);
 
+        /// <summary>
+        /// Determines if the <paramref name="item"/> is contained in either <see cref="ExplicitIncludedItems"/> or <see cref="ExplicitExcludedItems"/>.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        bool ContainsExplicitly(T item);
+
         #endregion
 
         /// <summary> Determines if the specified item is included either by being explititly included ( <see cref="Include(T)"/>, <see cref="Include(T[])"/> ) or by default ( <see cref="Default"/> ) </summary>
