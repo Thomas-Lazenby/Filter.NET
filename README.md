@@ -34,8 +34,8 @@ var filter2 = new ConcurrentFilter<int>();
 // Clearing all override options and reverting to the default behavior
 filter.Clear();
 
-// Checking if equilvant
-bool equilvant = filter.Equals(filter2); // true.
+// Checking if equivalent
+bool equivalent = filter.Equals(filter2); // true.
 ```
 
 ### Explicity
@@ -52,7 +52,7 @@ bool containsExplicitExcluded2 = filter.AnyExplicitExcluded(5, 231); // false
 
 
 
-bool containsAtAllInIncludedOrExcludedExplititly2 = filter.ContainsExplicitly(2); // true;
+bool containsAtAllInIncludedOrExcludedExplicitly = filter.ContainsExplicitly(2); // true;
 
 IEnumerable<int> explicitIncludedItems = filter.ExplicitIncludedItems; // list of explicit included items.
 IEnumerable<int> explicitExcludedItems = filter.ExplicitExcludedItems; // list of explicit excluded items.
