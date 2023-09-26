@@ -8,7 +8,7 @@ namespace Filter
     /// Provides a filtering mechanism for collections of items of type T.
     /// </summary>
     /// <typeparam name="T">The type of items to be filtered.</typeparam>
-    public class ConcurrentFilter<T> : IFilter<T>
+    public class ConcurrentFilter<T> : IFilter<T>, IReadOnlyFilter<T>
         where T : notnull, IEquatable<T>
     {
         public FilterType Default { get; set; }
@@ -20,6 +20,7 @@ namespace Filter
         {
             if (other == null)
                 return false;
+
 
             if (Default != other.Default)
                 return false;
